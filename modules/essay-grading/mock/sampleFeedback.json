@@ -1,0 +1,121 @@
+{
+  "submission_id": null,
+  "created_at": "2026-06-24T00:00:00.000Z",
+  "task_type": "Task 2",
+  "question": "Some people believe that technology has made our lives more complicated. Others think it has made life easier. Discuss both views and give your own opinion.",
+  "locale": "zh",
+  "essay": {
+    "paragraphs": [
+      {
+        "id": "p1",
+        "text": "Technology has transformed modern life in ways that are both helpful and overwhelming."
+      },
+      {
+        "id": "p2",
+        "text": "On one hand, smartphones and online services allow people to communicate instantly and complete daily tasks more efficiently."
+      },
+      {
+        "id": "p3",
+        "text": "However, many argue that constant connectivity creates stress and reduces face-to-face interaction."
+      },
+      {
+        "id": "p4",
+        "text": "In my view, technology itself is not the main problem."
+      }
+    ]
+  },
+  "scores": {
+    "criteria": {
+      "task_response": { "band": 6.5, "limiting_factor": "Some ideas could be more fully developed" },
+      "coherence_cohesion": { "band": 6.0, "limiting_factor": "Mechanical linking in places" },
+      "lexical_resource": { "band": 6.5, "limiting_factor": "Adequate but not always precise" },
+      "grammar": { "band": 6.0, "limiting_factor": "Errors occasionally cause minor difficulty" }
+    },
+    "overall_band": 6.5
+  },
+  "annotations": [
+    {
+      "id": 1,
+      "paragraph_id": "p1",
+      "char_start": 0,
+      "char_end": 77,
+      "criterion": "task_response",
+      "level": "text",
+      "issue_type": "Good · Clear introduction of both views",
+      "severity": "low",
+      "evidence": {
+        "quote": "Technology has transformed modern life in ways that are both helpful and overwhelming.",
+        "reason": "Opens with a balanced framing that previews discussion of both sides."
+      },
+      "feedback": "开头有效概括了题目双方观点，为后文讨论奠定基础。",
+      "revision_guidance": "Keep this pattern in your revision.",
+      "citations": []
+    },
+    {
+      "id": 2,
+      "paragraph_id": "p2",
+      "char_start": 0,
+      "char_end": 108,
+      "criterion": "coherence_cohesion",
+      "level": "section",
+      "issue_type": "Adequate · Topic sentence present",
+      "severity": "medium",
+      "evidence": {
+        "quote": "On one hand, smartphones and online services allow people to communicate instantly and complete daily tasks more efficiently.",
+        "reason": "Clear paragraph opener but could link more explicitly to the question."
+      },
+      "feedback": "段落主题句清晰，但可更明确回扣题目中 technology makes life easier 的论点。",
+      "revision_guidance": "Add a phrase that directly echoes the question wording.",
+      "citations": []
+    },
+    {
+      "id": 3,
+      "paragraph_id": "p3",
+      "char_start": 0,
+      "char_end": 88,
+      "criterion": "lexical_resource",
+      "level": "clause_word",
+      "issue_type": "Good · Appropriate academic vocabulary",
+      "severity": "low",
+      "evidence": {
+        "quote": "However, many argue that constant connectivity creates stress and reduces face-to-face interaction.",
+        "reason": "Uses less common collocation constant connectivity appropriately."
+      },
+      "feedback": "词汇搭配 natural，体现了一定的学术表达范围。",
+      "revision_guidance": "Keep this pattern in your revision.",
+      "citations": []
+    },
+    {
+      "id": 4,
+      "paragraph_id": "p4",
+      "char_start": 0,
+      "char_end": 48,
+      "criterion": "grammar",
+      "level": "clause_word",
+      "issue_type": "Weak · Position stated briefly",
+      "severity": "high",
+      "evidence": {
+        "quote": "In my view, technology itself is not the main problem.",
+        "reason": "Clear opinion but under-developed in this paragraph."
+      },
+      "feedback": "立场表达清楚，但本段论证展开不足，影响任务回应深度。",
+      "revision_guidance": "Extend this paragraph with one concrete example supporting your view.",
+      "citations": []
+    }
+  ],
+  "overall_feedback": {
+    "summary": "文章结构完整，能讨论双方观点并给出个人立场，但在论证深度与衔接自然度上仍有提升空间。",
+    "priority_issues": [
+      "加强主体段论证展开，避免观点过于概括",
+      "改善段落间逻辑衔接，减少机械连接词"
+    ],
+    "next_steps": [
+      "为每个主体段增加一个具体例子",
+      "写完后检查是否明确回应了题目的两个观点"
+    ],
+    "reflection_questions": [
+      "你的结论段是否清晰重申了个人立场？",
+      "每个段落是否只讨论一个核心观点？"
+    ]
+  }
+}

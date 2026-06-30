@@ -1,0 +1,15 @@
+{
+  "name": "yasu-ielts",
+  "private": true,
+  "workspaces": [
+    "modules/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "prepare:portal": "node scripts/prepare-portal.mjs",
+    "dev": "npm run dev -w @yasu/essay-grading",
+    "build": "npm run build -w @yasu/essay-grading",
+    "start": "npm run start -w @yasu/essay-grading",
+    "typecheck": "npm run typecheck -w @yasu/essay-grading"
+  }
+}
