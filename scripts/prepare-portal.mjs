@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const defaultSrc = resolve(
   process.env.PORTAL_SOURCE ??
-    "C:/Users/hp/Downloads/雅速雅思门户-离线版.html",
+    resolve(root, "apps/website/source/portal-offline.html"),
 );
 const dest = resolve(root, "apps/website/public/index.html");
 
