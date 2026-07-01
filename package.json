@@ -7,9 +7,16 @@
   ],
   "scripts": {
     "prepare:portal": "node scripts/prepare-portal.mjs",
+    "build:vercel": "node scripts/vercel-build.mjs",
+    "dev:vercel": "vercel dev",
+    "verify:vercel": "node scripts/verify-vercel.mjs",
     "dev": "npm run dev -w @yasu/essay-grading",
     "build": "npm run build -w @yasu/essay-grading",
     "start": "npm run start -w @yasu/essay-grading",
     "typecheck": "npm run typecheck -w @yasu/essay-grading"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.3.0",
+    "vercel": "^41.0.0"
   }
 }

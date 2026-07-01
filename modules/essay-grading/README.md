@@ -60,11 +60,11 @@ const result = await runFeedbackGraph(essayText, {
 
 | 方式 | 说明 |
 |------|------|
-| 同服部署（当前试用） | 门户在 `/`，批改 UI 在 `/grading`，API 在 `/api/*` |
+| **Vercel 全栈** | `npm run build:vercel`，门户 `/` + 批改 `/grading` + 分步 API |
+| 同服 Express（本地） | 门户在 `/`，批改 UI 在 `/grading`，API 在 `/api/*` |
 | 独立部署 | `npm run build && npm start`，仅批改模块 |
-| 嵌入 API | 主站调用 `POST /api/essay-feedback`，或 `import { runFeedbackGraph }` 自建路由 |
+| 嵌入 API | 分步 `/api/grade/*` 或单体 `/api/essay-feedback` |
 | 嵌入 UI | 挂载 `dist/public/` 到主站 `/grading` 路由 |
-| Workspace | 根目录 `package.json` workspaces，`apps/website` 通过 `"@yasu/essay-grading": "workspace:*"` 依赖 |
 
 ## 环境变量
 

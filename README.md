@@ -29,6 +29,20 @@ npm run dev
 
 Mock 批改：`http://localhost:3101/grading?mock=1`
 
+## Vercel 部署
+
+```bash
+npm install
+npm run prepare:portal
+npm run build:vercel
+npm run dev:vercel          # 本地 Vercel 模拟
+npm run verify:vercel       # 冒烟测试（需 dev:vercel 运行中）
+```
+
+GitHub 连接 Vercel 后，Build Command 使用 `npm run build:vercel`，并安装 **Upstash Redis** 集成 + 配置 API Key。详见 [modules/essay-grading/docs/DEPLOYMENT.md](modules/essay-grading/docs/DEPLOYMENT.md)。
+
+Pro 用户可用 `?mode=monolithic` 单次批改（`maxDuration: 300`）。
+
 ## 模块文档
 
 详见 [modules/essay-grading/README.md](modules/essay-grading/README.md)。

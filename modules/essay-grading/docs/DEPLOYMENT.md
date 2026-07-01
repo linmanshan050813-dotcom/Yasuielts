@@ -1,87 +1,104 @@
 # Deployment
 
-This app is a **Node.js + Express** server that serves the frontend and runs API routes (`/api/extract-text`, `/api/essay-feedback`). Feedback generation can take **30–90+ seconds** because it calls the LLM several times per submission.
+## Vercel（推荐 · 全栈）
 
-## Recommended: Render or Railway
+门户、批改 UI 与 API 均部署在 Vercel。批改采用 **分步 Serverless API**（Hobby 10s 超时友好），会话状态存 **Upstash Redis**（Vercel Marketplace 集成；本地无 Redis 时自动用内存）。
 
-These platforms fit a long-running Express process with file uploads and slow API calls.
+### 前置条件
 
-### Build and start (already in `package.json`)
+1. [Vercel](https://vercel.com) 账号，GitHub 仓库已连接
+2. Vercel Dashboard → **Marketplace** → 安装 **Upstash Redis**，绑定到项目（自动注入 `KV_REST_API_URL` / `KV_REST_API_TOKEN`）
+3. 环境变量：
+
+| 变量 | 必填 | 说明 |
+|------|------|------|
+| `DEEPSEEK_API_KEY` | 是 | 批改 LLM |
+| `OPENAI_API_KEY` | 是* | 题目图片 OCR（Vision） |
+| `LLM_PROVIDER` | 否 | 默认 `deepseek` |
+| `LLM_MODEL` | 否 | 默认 `deepseek-v4-flash` |
+| `KV_REST_API_URL` | 生产推荐 | Upstash Redis 自动注入 |
+| `KV_REST_API_TOKEN` | 生产推荐 | Upstash Redis 自动注入 |
+
+\* 若不上传题目图片可暂不填
+
+### 部署设置
+
+| 项 | 值 |
+|----|-----|
+| Framework Preset | Other |
+| Root Directory | `.`（仓库根） |
+| Build Command | `npm run build:vercel` |
+| Output Directory | `public` |
+
+`vercel.json` 已配置路由与函数超时。
+
+### 本地 Vercel 开发
 
 ```bash
 npm install
-npm run build
-npm start
+npm run prepare:portal   # 首次需要
+npm run build:vercel
+npx vercel dev           # 或 npm run dev:vercel
 ```
 
-- **Build**: `npm run build` — frontend → `dist/public/`, backend → `dist/api/`, prompts → `dist/grading/prompts/`
-- **Start**: `node dist/api/server.js`
-- Express serves static files from `dist/public/` (production) or `src/web/` (development)
+验证：
 
-### Render (Web Service)
+```bash
+# 另开终端，对 vercel dev 默认 http://localhost:3000
+npm run verify:vercel
+```
 
-| Setting | Value |
-|---------|--------|
-| Environment | Node |
-| Build Command | `npm install && npm run build` |
-| Start Command | `npm start` |
-| Node version | 20+ |
+### 批改模式
 
-**Environment variables:**
+| 模式 | URL / 配置 | 说明 |
+|------|------------|------|
+| **stepwise**（默认） | — | 5 次 API 调用（4 维度 + 打分），适配 Hobby |
+| **monolithic** | `?mode=monolithic` | 单次 `/api/essay-feedback`，需 **Pro** + `maxDuration: 300` |
+| **mock** | `?mock=1` | 静态 JSON，无需 LLM |
 
-| Variable | Required |
-|----------|----------|
-| `OPENAI_API_KEY` | Yes |
-| `OPENAI_MODEL` | No (defaults in code) |
-| `PORT` | Set automatically by Render |
+### Hobby 限制
 
-### Railway
+- 单步函数最长 **10s**；若某次 LLM 调用超时，请升级 **Pro** 或使用 `?mode=monolithic`
+- 上传文件上限 **4MB**
 
-Same commands as Render. Add `OPENAI_API_KEY` in Variables. Railway injects `PORT`.
+---
 
-### Local production smoke test
+## Render / Railway（Express 常驻）
 
-```powershell
+适合不想用 Serverless 的场景，支持长时间单次批改。
+
+```bash
+cd modules/essay-grading
 npm install
 npm run build
 npm start
 ```
 
-Open `http://localhost:3101` (or the `PORT` from `.env`).
+Root Directory 设为 `modules/essay-grading`，Start Command: `npm start`。
 
 ---
 
-## Not recommended: Vercel (without a rewrite)
+## 本地 Express 开发
 
-Vercel is optimized for **static sites** and **short-lived Serverless Functions**. This MVP uses:
-
-- A persistent Express app
-- `multer` file uploads
-- Multi-step LangGraph + OpenAI calls (often > 10s)
-
-Deploying as-is on Vercel will likely hit **timeouts** and requires restructuring.
-
-### What Vercel would require
-
-1. Split API into Serverless Functions under `/api/` (e.g. `api/essay-feedback.ts`, `api/extract-text.ts`).
-2. Replace `app.listen` with exported handlers compatible with `@vercel/node`.
-3. Handle file uploads within function body limits and timeout caps (Pro plan may still be tight for 3+ LLM calls).
-4. Serve static frontend as Vercel static output; point `index.html` script paths accordingly.
-5. Increase `maxDuration` in `vercel.json` (still may be insufficient for full feedback graph).
-
-For a course MVP, **Render or Railway is simpler and more reliable**.
-
----
-
-## Files layout after `npm run build`
-
-```text
-dist/backend/          Compiled Express server + lib
-dist/shared/           Shared types used by backend
-src/frontend/          index.html, styles.css (served as static)
-src/frontend/dist/     Compiled frontend JS
-src/backend/lib/prompts/prompt.md   Read at runtime from project root
-mock/                  Optional sample JSON
+```bash
+npm install
+npm run prepare:portal
+npm run dev -w @yasu/essay-grading
 ```
 
-Ensure `prompt.md` and frontend assets are included in the deployment bundle (they live under `src/`, not `dist/`).
+访问 `http://localhost:3101/`（门户 + `/grading` 批改）。
+
+本地无 KV 时使用内存 Session Store，与 `vercel dev` 行为一致。
+
+---
+
+## 构建产物
+
+```text
+public/                    Vercel 静态输出（build:vercel 生成）
+  index.html               门户
+  grading/                 批改 UI
+  mock/                    Mock 数据
+api/                       Vercel Serverless 入口
+modules/essay-grading/dist/  编译后的 API 逻辑
+```

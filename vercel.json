@@ -1,0 +1,28 @@
+{
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "public",
+  "installCommand": "npm install",
+  "functions": {
+    "api/grade/step.ts": {
+      "maxDuration": 10
+    },
+    "api/grade/finalize.ts": {
+      "maxDuration": 10
+    },
+    "api/grade/session.ts": {
+      "maxDuration": 10
+    },
+    "api/extract-text.ts": {
+      "maxDuration": 10
+    },
+    "api/essay-feedback.ts": {
+      "maxDuration": 300
+    }
+  },
+  "rewrites": [
+    { "source": "/grading", "destination": "/grading/index.html" },
+    { "source": "/grading/:path*", "destination": "/grading/:path*" },
+    { "source": "/mock/:path*", "destination": "/mock/:path*" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}

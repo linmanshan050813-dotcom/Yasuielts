@@ -4,4 +4,5 @@ node_modules/
 *.log
 .DS_Store
 dist/
+public/
 modules/essay-grading/src/web/dist/

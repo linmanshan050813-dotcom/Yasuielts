@@ -460,28 +460,28 @@ function resultsNeedLocale(locale: Locale): boolean {
 async function gradeTasks(
   locale: Locale,
   tasks: ("task1" | "task2")[],
-  options: { animateSteps: boolean },
 ): Promise<void> {
   for (const task of tasks) {
     const data = session.uploads[task] as TaskUploadData;
-    if (options.animateSteps) {
-      for (let step = 0; step < 4; step += 1) {
-        session.gradeStep = step;
-        renderScreen();
-        await sleep(step < 3 ? 600 : 200);
-      }
-    } else {
-      session.gradeStep = 3;
-      renderScreen();
-    }
+    session.gradeStep = 0;
+    renderScreen();
 
-    const result = await submitEssay(data.essay, {
-      taskType: getTaskType(session, task),
-      question: data.question,
-      locale,
-    });
+    const result = await submitEssay(
+      data.essay,
+      {
+        taskType: getTaskType(session, task),
+        question: data.question,
+        locale,
+      },
+      (uiStep) => {
+        session.gradeStep = uiStep;
+        renderScreen();
+      },
+    );
     session.results[task] = result;
     session.currentResultTask = task;
+    session.gradeStep = 4;
+    renderScreen();
   }
 }
 
@@ -491,7 +491,7 @@ async function regradeForLocale(locale: Locale): Promise<void> {
     return result && result.locale !== locale;
   });
   if (tasks.length === 0) return;
-  await gradeTasks(locale, tasks, { animateSteps: false });
+  await gradeTasks(locale, tasks);
 }
 
 async function handleLocaleChange(locale: Locale): Promise<void> {
@@ -534,7 +534,7 @@ async function runGrading(): Promise<void> {
   isRegradingLocale = false;
 
   try {
-    await gradeTasks(locale, tasks, { animateSteps: true });
+    await gradeTasks(locale, tasks);
     session.gradeStep = 4;
     localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
     session.currentViewerTask = session.currentResultTask;
@@ -548,10 +548,6 @@ async function runGrading(): Promise<void> {
     isGrading = false;
     isRegradingLocale = false;
   }
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function renderResultScreen(root: HTMLElement): void {
